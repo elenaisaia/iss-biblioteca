@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.control.TextField?>
+<VBox alignment="CENTER" prefHeight="300.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="BibliotecarController">
+   <HBox alignment="CENTER" prefHeight="179.0" prefWidth="600.0">
+      <Label text="Bibliotecar">
+         <font>
+            <Font size="32.0"/>
+         </font>
+      </Label>
+   </HBox>
+   <HBox alignment="CENTER" prefHeight="225.0" prefWidth="600.0">
+      <TableView fx:id="allCartiTableView" editable="true" prefHeight="225.0" prefWidth="500.0">
+         <columns>
+            <TableColumn prefWidth="200.0" text="Titlu">
+               <cellValueFactory>
+                  <PropertyValueFactory property="titlu" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="200.0" text="Autor">
+               <cellValueFactory>
+                  <PropertyValueFactory property="autor" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="48.0" text="Stare">
+               <cellValueFactory>
+                  <PropertyValueFactory property="stare" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn prefWidth="48.0" text="Cod">
+               <cellValueFactory>
+                  <PropertyValueFactory property="cod" />
+               </cellValueFactory>
+            </TableColumn>
+         </columns>
+      </TableView>
+   </HBox>
+   <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
+      <Label text="Operatiuni carte:">
+         <font>
+            <Font size="16.0"/>
+         </font>
+      </Label>
+   </HBox>
+   <HBox alignment="CENTER" prefHeight="134.0" prefWidth="600.0" spacing="20.0">
+      <VBox alignment="CENTER">
+         <TextField fx:id="titluTextField" />
+         <TextField fx:id="autorTextField" />
+         <TextField fx:id="codTextField" />
+      </VBox>
+      <VBox alignment="CENTER">
+         <Button fx:id="adaugareButton" onAction="#onAdaugareButtonClick" mnemonicParsing="false" text="Adaugare"/>
+         <Button fx:id="modificareButton" onAction="#onModificareButtonClick" mnemonicParsing="false" text="Modificare"/>
+         <Button fx:id="stergereButton" onAction="#onStergereButtonClick" mnemonicParsing="false" text="Stergere"/>
+         <Button fx:id="restituireButton" onAction="#onRestituireButtonClick" mnemonicParsing="false" text="Restituire"/>
+         <Button fx:id="logoutButton" onAction="#onLogoutButtonClick" mnemonicParsing="false" text="Logout"/>
+      </VBox>
+   </HBox>
+</VBox>
