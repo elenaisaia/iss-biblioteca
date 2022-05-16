@@ -64,16 +64,17 @@ public class AbonatController {
         } catch (Exception e) {
             System.out.println("Urat la afterLoad :<");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("mpp");
-            alert.setHeaderText("Loading shows failure");
-            alert.setContentText("Unable to load shows");
+            alert.setTitle("iss");
+            alert.setHeaderText("Loading carti failure");
+            alert.setContentText("Unable to load carti");
             alert.showAndWait();
         }
     }
 
     private void updateAllCarti() throws BibliotecaException {
         try {
-            List<Carte> carti = service.findAllCarti();
+            List<Carte> carti = service.findCartiByStatus(false);
+            System.out.println("carti disponibile: " + carti);
             allCartiTableView.getItems().clear();
             for(Carte carte : carti){
                 allCartiTableView.getItems().add(carte);
@@ -83,6 +84,7 @@ public class AbonatController {
 
         } catch (Exception e) {
             System.out.println("Urat la updateAll :<");
+            e.printStackTrace();
             throw new BibliotecaException("Urat la updateAll :<");
         }
     }
@@ -116,21 +118,21 @@ public class AbonatController {
 
         if (autor.equals("")) {
             try {
-                carti = service.findCartiByTitlu(titlu);
+                carti = service.findCartiByTitluStatus(titlu, false);
             } catch (Exception e) {
                 System.out.println("Urat la filter by titlu! :<");
             }
         }
         else if (titlu.equals("")) {
             try {
-                carti = service.findCartiByAutor(autor);
+                carti = service.findCartiByAutorStatus(autor, false);
             } catch (Exception e) {
                 System.out.println("Urat la filter by autor! :<");
             }
         }
         else {
             try {
-                carti = service.findCartiByTitluAutor(titlu, autor);
+                carti = service.findCartiByTitluAutorStatus(titlu, autor, false);
             } catch (Exception e) {
                 System.out.println("Urat la filter by titlu si autor! :<");
             }

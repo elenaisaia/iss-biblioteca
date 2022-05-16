@@ -21,7 +21,7 @@ public class Service {
         this.repoImprumut = repoImprumut;
     }
 
-    public boolean login(Bibliotecar persoana) throws BibliotecaException {
+    public synchronized boolean login(Bibliotecar persoana) throws BibliotecaException {
         Bibliotecar bibliotecarGasit = repoBibliotecar.findById(persoana.getID());
         Abonat abonatGasit = repoAbonat.findById(persoana.getID());
         if(bibliotecarGasit == null && abonatGasit == null) {
@@ -41,7 +41,7 @@ public class Service {
         return true;
     }
 
-    public void register(Abonat abonat) throws BibliotecaException {
+    public synchronized void register(Abonat abonat) throws BibliotecaException {
         Abonat abonatGasit = repoAbonat.findById(abonat.getID());
         if(abonatGasit != null) {
             throw new BibliotecaException("Abonat deja existent! :<");
@@ -49,7 +49,7 @@ public class Service {
         addAbonat(abonat);
     }
 
-    private void addAbonat(Abonat abonat) {
+    private synchronized void addAbonat(Abonat abonat) {
         repoAbonat.add(abonat);
     }
 
@@ -57,15 +57,31 @@ public class Service {
         return repoCarte.findAll();
     }
 
-    public List<Carte> findCartiByTitlu(String titlu) {
+    public synchronized List<Carte> findCartiByTitlu(String titlu) {
         return repoCarte.findByTitlu(titlu);
     }
 
-    public List<Carte> findCartiByAutor(String autor) {
+    public synchronized List<Carte> findCartiByAutor(String autor) {
         return repoCarte.findByAutor(autor);
     }
 
-    public List<Carte> findCartiByTitluAutor(String titlu, String autor) {
+    public synchronized List<Carte> findCartiByTitluAutor(String titlu, String autor) {
         return repoCarte.findByTitluAutor(titlu, autor);
+    }
+
+    public synchronized List<Carte> findCartiByStatus(boolean status) {
+        return repoCarte.findByStatus(status);
+    }
+
+    public synchronized List<Carte> findCartiByTitluStatus(String titlu, boolean status) {
+        return repoCarte.findByTitluStatus(titlu, status);
+    }
+
+    public synchronized List<Carte> findCartiByAutorStatus(String autor, boolean status) {
+        return repoCarte.findByAutorStatus(autor, status);
+    }
+
+    public synchronized List<Carte> findCartiByTitluAutorStatus(String titlu, String autor, boolean status) {
+        return repoCarte.findByTitluAutorStatus(titlu, autor, status);
     }
 }
