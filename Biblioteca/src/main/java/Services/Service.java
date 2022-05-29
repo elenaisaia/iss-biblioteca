@@ -1,10 +1,9 @@
 package Services;
 
-import Model.Abonat;
-import Model.Bibliotecar;
-import Model.Carte;
+import Model.*;
 import Repository.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class Service {
@@ -83,5 +82,45 @@ public class Service {
 
     public synchronized List<Carte> findCartiByTitluAutorStatus(String titlu, String autor, boolean status) {
         return repoCarte.findByTitluAutorStatus(titlu, autor, status);
+    }
+
+    public synchronized void addCarte(Carte carte) {
+        repoCarte.add(carte);
+    }
+
+    public synchronized void deleteCarte(Carte carte) {
+        repoCarte.delete(carte.getID());
+    }
+
+    public synchronized void modifyCarte(Carte carte) {
+        repoCarte.update(carte, carte.getID());
+    }
+
+    public synchronized void updateCarte(Carte carte) {
+        carte.setStatus(true);
+        repoCarte.update(carte, carte.getID());
+    }
+
+    public synchronized void updateImprumut(Imprumut imprumut) {
+        imprumut.setStatus(Status.restituit);
+        imprumut.setDataRestituire(LocalDate.now());
+        List<Integer> coduri = repoImprumut.findByImprumut(imprumut.getID());
+        for(Integer cod : coduri) {
+            Carte carte = repoCarte.findById(cod);
+            carte.setStatus(false);
+            repoCarte.update(carte, carte.getID());
+        }
+    }
+
+    public synchronized void addImprumut(Imprumut imprumut) {
+        repoImprumut.add(imprumut);
+    }
+
+    public synchronized void addImprumutCarte(Imprumut imprumut, Carte carte) {
+        repoImprumut.addIC(imprumut, carte);
+    }
+
+    public synchronized List<Imprumut> findImprumuturi() {
+        return repoImprumut.findAll();
     }
 }

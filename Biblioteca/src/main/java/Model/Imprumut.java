@@ -6,13 +6,13 @@ import java.util.List;
 
 public class Imprumut implements Identifiable<Integer> {
     private Integer id;
-    private Abonat abonat;
+    private String abonat;
     private List<Carte> carti;
     private LocalDate dataImprumut;
     private LocalDate dataRestituire;
     private Status status;
 
-    public Imprumut(Abonat abonat) {
+    public Imprumut(String abonat) {
         this.abonat = abonat;
         this.carti = new ArrayList<>();
         this.dataImprumut = LocalDate.now();
@@ -20,7 +20,7 @@ public class Imprumut implements Identifiable<Integer> {
         this.status = Status.nerestituit;
     }
 
-    public Imprumut(Integer id, Abonat abonat, List<Carte> carti, LocalDate dataImprumut, LocalDate dataRestituire, Status status) {
+    public Imprumut(Integer id, String abonat, List<Carte> carti, LocalDate dataImprumut, LocalDate dataRestituire, Status status) {
         this.id = id;
         this.abonat = abonat;
         this.carti = carti;
@@ -39,7 +39,7 @@ public class Imprumut implements Identifiable<Integer> {
         this.id = id;
     }
 
-    public Abonat getAbonat() {
+    public String getAbonat() {
         return abonat;
     }
 
@@ -47,11 +47,23 @@ public class Imprumut implements Identifiable<Integer> {
         return carti;
     }
 
+    public LocalDate getDataImprumut() {
+        return dataImprumut;
+    }
+
+    public LocalDate getDataRestituire() {
+        return dataRestituire;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }
 
-    public void setAbonat(Abonat abonat) {
+    public void setAbonat(String abonat) {
         this.abonat = abonat;
     }
 

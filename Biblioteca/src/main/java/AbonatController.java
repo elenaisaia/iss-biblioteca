@@ -1,4 +1,5 @@
 import Model.Carte;
+import Model.Imprumut;
 import Services.BibliotecaException;
 import Services.Service;
 import javafx.event.ActionEvent;
@@ -11,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class AbonatController {
 
     private String abonatCrt;
     private Service service;
+    private List<Carte> carti;
 
     public AbonatController() {
     }
@@ -46,6 +49,8 @@ public class AbonatController {
         this.adaugaButton.managedProperty().bind(this.adaugaButton.visibleProperty());
         this.finalizeazaButton.setVisible(true);
         this.finalizeazaButton.managedProperty().bind(this.finalizeazaButton.visibleProperty());
+
+        this.carti = new ArrayList<>();
     }
 
     public void setService(Service service) {
@@ -54,6 +59,7 @@ public class AbonatController {
     private void setCurrentAbonat(String cnp) {
         this.abonatCrt = cnp;
     }
+
 
     public void afterLoad(Service service, String cnp) {
         this.setService(service);
@@ -153,9 +159,57 @@ public class AbonatController {
 
     @FXML
     public void onAdaugaButtonClick(ActionEvent event) {
+        Carte carte = (Carte) filteredCartiTableView.getSelectionModel().getSelectedItem();
+        if(carte == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("iss");
+            alert.setHeaderText("Adding carte failure");
+            alert.setContentText("Please select a book first! :<");
+            alert.showAndWait();
+            return;
+        }
+
+        carti.add(carte);
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("iss");
+        alert.setHeaderText("Adding carte succes");
+        alert.setContentText("Carte adaugata cu succes! :>");
+        alert.showAndWait();
     }
 
     @FXML
     public void onFinalizeazaButtonClick(ActionEvent event) {
+        if(carti.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("iss");
+            alert.setHeaderText("Adding imprumut failure");
+            alert.setContentText("Please add some books first! :<");
+            alert.showAndWait();
+            return;
+        }
+
+        Imprumut imprumut = new Imprumut(abonatCrt);
+        imprumut.setCarti(carti);
+
+        service.addImprumut(imprumut);
+        for(Carte carte : carti) {
+            service.updateCarte(carte);
+            service.addImprumutCarte(imprumut, carte);
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("iss");
+        alert.setHeaderText("Adding imprumut succes");
+        alert.setContentText("Carti imprumutate cu succes! :>" + carti);
+        alert.showAndWait();
+
+        filteredCartiTableView.getItems().clear();
+        try {
+            updateAllCarti();
+        } catch (Exception e) {
+            System.out.println("Urat la updateAll dupa imprumut :<");
+        }
+        carti.clear();
     }
 }

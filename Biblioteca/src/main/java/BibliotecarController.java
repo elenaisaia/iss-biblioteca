@@ -1,4 +1,7 @@
 import Model.Carte;
+import Model.Imprumut;
+import Model.Stare;
+import Model.Status;
 import Services.BibliotecaException;
 import Services.Service;
 import javafx.event.ActionEvent;
@@ -11,14 +14,17 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BibliotecarController {
     @FXML TableView allCartiTableView;
+    @FXML TableView imprumuturiTableView;
     @FXML TextField autorTextField;
     @FXML TextField titluTextField;
     @FXML TextField codTextField;
+    @FXML TextField stareTextField;
 
     @FXML Button restituireButton;
     @FXML Button adaugareButton;
@@ -66,12 +72,13 @@ public class BibliotecarController {
 
         try {
             this.updateAllCarti();
+            this.updateImprumuturi();
         } catch (Exception e) {
             System.out.println("Urat la afterLoad :<");
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("mpp");
-            alert.setHeaderText("Loading shows failure");
-            alert.setContentText("Unable to load shows");
+            alert.setTitle("iss");
+            alert.setHeaderText("Loading carti failure");
+            alert.setContentText("Unable to load carti");
             alert.showAndWait();
         }
     }
@@ -79,6 +86,7 @@ public class BibliotecarController {
     private void updateAllCarti() throws BibliotecaException {
         try {
             List<Carte> carti = service.findAllCarti();
+            System.out.println("carti: " + carti);
             allCartiTableView.getItems().clear();
             for(Carte carte : carti){
                 allCartiTableView.getItems().add(carte);
@@ -88,6 +96,25 @@ public class BibliotecarController {
 
         } catch (Exception e) {
             System.out.println("Urat la updateAll :<");
+            e.printStackTrace();
+            throw new BibliotecaException("Urat la updateAll :<");
+        }
+    }
+
+    private void updateImprumuturi() throws BibliotecaException {
+        try {
+            List<Imprumut> imprumuturi = service.findImprumuturi();
+            System.out.println("imprumuturi: " + imprumuturi);
+            imprumuturiTableView.getItems().clear();
+            for(Imprumut imprumut : imprumuturi){
+                imprumuturiTableView.getItems().add(imprumut);
+                System.out.println(imprumut);
+            }
+//            allCartiTableView.getItems().addAll(imprumuturi);
+
+        } catch (Exception e) {
+            System.out.println("Urat la updateAll :<");
+            e.printStackTrace();
             throw new BibliotecaException("Urat la updateAll :<");
         }
     }
@@ -112,17 +139,135 @@ public class BibliotecarController {
 
     @FXML
     public void onRestituireButtonClick(ActionEvent event) {
+        Imprumut imprumut = (Imprumut) imprumuturiTableView.getSelectionModel().getSelectedItem();
+        if(imprumut == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("iss");
+            alert.setHeaderText("Restituire imprumut failure");
+            alert.setContentText("Please select an imprumut first! :<");
+            alert.showAndWait();
+            return;
+        }
+
+        service.updateImprumut(imprumut);
+        try {
+            updateImprumuturi();
+        } catch (Exception e) {
+            System.out.println("Urat la updateImprumuturi dupa restituire :<");
+        }
     }
 
     @FXML
     public void onAdaugareButtonClick(ActionEvent event) {
+        String titlu = titluTextField.getText();
+        if(titlu.equals("")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Campul pentru titlu nu poate fi gol! :<\n");
+            alert.showAndWait();
+            return;
+        }
+
+        String autor = autorTextField.getText();
+        if(autor.equals("")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Campul pentru autor nu poate fi gol! :<\n");
+            alert.showAndWait();
+            return;
+        }
+
+        String codStr = codTextField.getText();
+        Integer cod;
+        try {
+            cod = Integer.parseInt(codStr);
+        } catch (Exception e){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Campul pentru cod trebuie sa fie un numar! :<\n");
+            alert.showAndWait();
+            return;
+        }
+
+        String stare = stareTextField.getText();
+        if(!stare.equals("noua") && !stare.equals("buna") && !stare.equals("satisfacatoare") && !stare.equals("rea")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Starea poate fi numai noua, buna, satisfacatoar sau rea! :<\n");
+            alert.showAndWait();
+            return;
+        }
+
+        Carte carte = new Carte(cod, titlu, autor, Stare.getStare(stare));
+        service.addCarte(carte);
+        try {
+            updateAllCarti();
+        } catch (Exception e) {
+            System.out.println("Urat la updateAll dupa add :<");
+        }
     }
 
     @FXML
     public void onModificareButtonClick(ActionEvent event) {
+        Carte carte = (Carte) allCartiTableView.getSelectionModel().getSelectedItem();
+
+        if(carte == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("iss");
+            alert.setHeaderText("Updating carte failure");
+            alert.setContentText("Please select a book first! :<");
+            alert.showAndWait();
+            return;
+        }
+
+        String stare = stareTextField.getText();
+        if(!stare.equals("") && !stare.equals("noua") && !stare.equals("buna") && !stare.equals("satisfacatoare") && !stare.equals("rea")){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error!");
+            alert.setHeaderText("Starea poate fi numai noua, buna, satisfacatoar sau rea! :<\n");
+            alert.showAndWait();
+            return;
+        }
+        if(!stare.equals("")){
+            carte.setStare(Stare.getStare(stare));
+        }
+
+        String titlu = titluTextField.getText();
+        if(!titlu.equals("")){
+            carte.setTitlu(titlu);
+        }
+
+        String autor = autorTextField.getText();
+        if(!autor.equals("")){
+            carte.setAutor(autor);
+        }
+
+        service.modifyCarte(carte);
+        try {
+            updateAllCarti();
+        } catch (Exception e) {
+            System.out.println("Urat la updateAll dupa modify :<");
+        }
     }
 
     @FXML
     public void onStergereButtonClick(ActionEvent event) {
+        Carte carte = (Carte) allCartiTableView.getSelectionModel().getSelectedItem();
+
+        if(carte == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("iss");
+            alert.setHeaderText("Updating carte failure");
+            alert.setContentText("Please select a book first! :<");
+            alert.showAndWait();
+            return;
+        }
+
+        service.deleteCarte(carte);
+        try {
+            updateAllCarti();
+        } catch (Exception e) {
+            System.out.println("Urat la updateAll dupa delete :<");
+        }
     }
 }

@@ -2,69 +2,93 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.cell.PropertyValueFactory?>
-<?import javafx.scene.control.TextField?>
-<VBox alignment="CENTER" prefHeight="300.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml"
+<VBox prefHeight="550.0" prefWidth="600.0" spacing="20.0" xmlns:fx="http://javafx.com/fxml/"
       fx:controller="BibliotecarController">
-   <HBox alignment="CENTER" prefHeight="179.0" prefWidth="600.0">
-      <Label text="Bibliotecar">
+   <HBox alignment="CENTER" prefHeight="34.0" prefWidth="600.0">
+      <Label text="Consultare carti">
          <font>
-            <Font size="32.0"/>
+            <Font size="32.0" />
          </font>
       </Label>
    </HBox>
    <HBox alignment="CENTER" prefHeight="225.0" prefWidth="600.0">
       <TableView fx:id="allCartiTableView" editable="true" prefHeight="225.0" prefWidth="500.0">
          <columns>
-            <TableColumn prefWidth="200.0" text="Titlu">
+            <TableColumn prefWidth="250.0" text="Titlu">
                <cellValueFactory>
                   <PropertyValueFactory property="titlu" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="200.0" text="Autor">
+            <TableColumn prefWidth="195.0" text="Autor">
                <cellValueFactory>
                   <PropertyValueFactory property="autor" />
                </cellValueFactory>
             </TableColumn>
-            <TableColumn prefWidth="48.0" text="Stare">
+            <TableColumn prefWidth="50.0" text="Stare">
                <cellValueFactory>
                   <PropertyValueFactory property="stare" />
-               </cellValueFactory>
-            </TableColumn>
-            <TableColumn prefWidth="48.0" text="Cod">
-               <cellValueFactory>
-                  <PropertyValueFactory property="cod" />
                </cellValueFactory>
             </TableColumn>
          </columns>
       </TableView>
    </HBox>
-   <HBox alignment="CENTER" prefHeight="41.0" prefWidth="600.0">
-      <Label text="Operatiuni carte:">
-         <font>
-            <Font size="16.0"/>
-         </font>
-      </Label>
-   </HBox>
-   <HBox alignment="CENTER" prefHeight="134.0" prefWidth="600.0" spacing="20.0">
-      <VBox alignment="CENTER">
-         <TextField fx:id="titluTextField" />
-         <TextField fx:id="autorTextField" />
-         <TextField fx:id="codTextField" />
+   <HBox alignment="CENTER" prefHeight="182.0" prefWidth="600.0">
+      <VBox prefHeight="222.0" prefWidth="305.0">
+         <Label prefHeight="26.0" prefWidth="119.0" text="Cautare carte:">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </Label>
+         <HBox alignment="CENTER" prefHeight="43.0" prefWidth="306.0" spacing="20.0">
+            <Label text="Titlu" />
+            <TextField fx:id="titluTextField"/>
+         </HBox>
+         <HBox alignment="CENTER" prefHeight="44.0" prefWidth="306.0" spacing="20.0">
+            <Label text="Autor" />
+            <TextField fx:id="autorTextField"/>
+         </HBox>
+         <HBox alignment="CENTER" prefHeight="44.0" prefWidth="306.0" spacing="20.0">
+            <Label text="Cod" />
+            <TextField fx:id="codTextField"/>
+         </HBox>
+         <HBox alignment="CENTER" prefHeight="44.0" prefWidth="306.0" spacing="20.0">
+            <Label text="Stare" />
+            <TextField fx:id="stareTextField"/>
+         </HBox>
+         <HBox alignment="CENTER" layoutX="10.0" layoutY="97.0" prefHeight="38.0" prefWidth="306.0" spacing="20.0">
+            <Button fx:id="adaugareButton" onAction="#onAdaugareButtonClick" mnemonicParsing="false" text="Adauga" />
+            <Button fx:id="modificareButton" onAction="#onModificareButtonClick" mnemonicParsing="false" text="Modifica" />
+            <Button fx:id="stergereButton" onAction="#onStergereButtonClick" mnemonicParsing="false" text="Sterge" />
+         </HBox>
+         <HBox alignment="CENTER" prefHeight="36.0" prefWidth="306.0" spacing="20.0">
+            <Button fx:id="logoutButton" onAction="#onLogoutButtonClick" mnemonicParsing="false" text="Logout" />
+            <Button fx:id="restituireButton" onAction="#onRestituireButtonClick" mnemonicParsing="false" text="Restituie" />
+         </HBox>
       </VBox>
-      <VBox alignment="CENTER">
-         <Button fx:id="adaugareButton" onAction="#onAdaugareButtonClick" mnemonicParsing="false" text="Adaugare"/>
-         <Button fx:id="modificareButton" onAction="#onModificareButtonClick" mnemonicParsing="false" text="Modificare"/>
-         <Button fx:id="stergereButton" onAction="#onStergereButtonClick" mnemonicParsing="false" text="Stergere"/>
-         <Button fx:id="restituireButton" onAction="#onRestituireButtonClick" mnemonicParsing="false" text="Restituire"/>
-         <Button fx:id="logoutButton" onAction="#onLogoutButtonClick" mnemonicParsing="false" text="Logout"/>
-      </VBox>
+      <TableView fx:id="imprumuturiTableView" editable="true" prefHeight="100.0" prefWidth="239.0">
+         <columns>
+            <TableColumn text="CNP">
+               <cellValueFactory>
+                  <PropertyValueFactory property="abonat" />
+               </cellValueFactory>
+            </TableColumn>
+            <TableColumn text="Data imprumut">
+               <cellValueFactory>
+                  <PropertyValueFactory property="dataImprumut" />
+               </cellValueFactory>
+            </TableColumn>
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
    </HBox>
 </VBox>

@@ -105,7 +105,7 @@ public class LoginController{
                 Parent root = fxmlLoader.load();
                 BibliotecarController ctrl = fxmlLoader.getController();
                 ctrl.afterLoad(this.service, persoana.getID());
-                Scene scene = new Scene(root, 600, 300);
+                Scene scene = new Scene(root, 600, 550);
                 assert persoana != null;
                 current.setTitle("Logged in as - " + persoana.getID());
                 current.setScene(scene);

@@ -76,6 +76,11 @@
                   <PropertyValueFactory property="stare" />
                </cellValueFactory>
             </TableColumn>
+<!--            <TableColumn text="Cod">-->
+<!--               <cellValueFactory>-->
+<!--                  <PropertyValueFactory property="cod" />-->
+<!--               </cellValueFactory>-->
+<!--            </TableColumn>-->
          </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

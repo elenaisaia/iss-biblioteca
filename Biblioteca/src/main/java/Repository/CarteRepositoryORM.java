@@ -1,6 +1,7 @@
 package Repository;
 
 import Model.Carte;
+import Model.Stare;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -37,7 +38,20 @@ public class CarteRepositoryORM implements CarteRepositoryInterface {
 
     @Override
     public void update(Carte carte, Integer id) {
-        //TODO
+        //Stare stare = carte.getStare();
+        try(Session session = sessionFactory.openSession()) {
+            Transaction transaction = null;
+            try {
+                transaction = session.beginTransaction();
+                session.update(carte);
+                transaction.commit();
+                //carte.setStare(stare);
+            } catch (RuntimeException e) {
+                System.err.println("Eroare la update carte " + e);
+                if (transaction != null)
+                    transaction.rollback();
+            }
+        }
     }
 
     @Override
