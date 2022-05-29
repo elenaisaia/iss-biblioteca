@@ -23,7 +23,20 @@ public class ImprumutRepository implements ImprumutRepositoryInterface {
 
     @Override
     public void update(Imprumut imprumut, Integer id) {
-
+        Connection connection = dbUtils.getConnection();
+        try(PreparedStatement preparedStatement = connection.prepareStatement("update Imprumuturi set cnp=?, data_imprumut=?, data_restituire=?, status=? where id_imprumut=? "))
+        {
+            preparedStatement.setString(1, imprumut.getAbonat());
+            preparedStatement.setString(2, imprumut.getDataImprumut().toString());
+            preparedStatement.setString(3, imprumut.getDataRestituire().toString());
+            preparedStatement.setString(4, imprumut.getStatus().toString());
+            preparedStatement.setInt(5, id);
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("Error DB" + ex);
+        }
     }
 
     @Override
@@ -100,7 +113,7 @@ public class ImprumutRepository implements ImprumutRepositoryInterface {
         try(PreparedStatement preStnt = con.prepareStatement("select * from ImprumuturiCarti where id_imprumut = ?")) {
             preStnt.setInt(1, id);
             try(ResultSet result = preStnt.executeQuery()) {
-                if (result.next()) {
+                while (result.next()) {
                     Integer cod = result.getInt("cod");
                     carti.add(cod);
                 }

@@ -104,7 +104,9 @@ public class Service {
     public synchronized void updateImprumut(Imprumut imprumut) {
         imprumut.setStatus(Status.restituit);
         imprumut.setDataRestituire(LocalDate.now());
+        repoImprumut.update(imprumut, imprumut.getID());
         List<Integer> coduri = repoImprumut.findByImprumut(imprumut.getID());
+        System.out.println("coduri" + coduri);
         for(Integer cod : coduri) {
             Carte carte = repoCarte.findById(cod);
             carte.setStatus(false);
