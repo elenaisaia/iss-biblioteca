@@ -45,7 +45,7 @@ public class ImprumutRepository implements ImprumutRepositoryInterface {
         List<Imprumut> imprumuturi = new ArrayList<>();
         try(PreparedStatement preStnt = con.prepareStatement("select * from Imprumuturi")) {
             try(ResultSet result = preStnt.executeQuery()) {
-                if (result.next()) {
+                while (result.next()) {
                     Integer id_imprumut = result.getInt("id_imprumut");
                     String cnp = result.getString("cnp");
                     LocalDate data_imprumut = LocalDate.parse(result.getString("data_imprumut"));
